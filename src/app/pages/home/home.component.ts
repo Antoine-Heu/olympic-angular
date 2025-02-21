@@ -26,7 +26,10 @@ export class HomeComponent implements OnInit {
   explodeSlices: boolean = false;
   animations: boolean = true;
 
-  constructor(private olympicService: OlympicService, private router: Router) {}
+  constructor(
+    private olympicService: OlympicService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();

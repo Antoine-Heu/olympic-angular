@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Olympic } from '../models/Olympic';
 import { Participation } from '../models/Participation';
 
@@ -44,8 +44,23 @@ export class OlympicService {
   getMedalsCountByCountry(olympic: Olympic): number {
     return olympic.participations.reduce((sum, p) => sum + p.medalsCount, 0);
   }
-  
-  getOlympicDetails(olympic: Olympic): Participation[] {
-    return olympic.participations
+
+  getOlympicCountry(countryName: string): Observable<Olympic | undefined> {
+    return this.olympics$.pipe(
+      map((data) => data?.find((o) => o.country === countryName))
+    );
+  }
+
+  getCountryChartData(countryName: string): Observable<any[]> {
+    return this.getOlympicCountry(countryName).pipe(
+      map((country) =>
+        country
+          ? country.participations.map((p) => ({
+              year: p.year.toString(),
+              medals: p.medalsCount,
+            }))
+          : []
+      )
+    );
   }
 }
