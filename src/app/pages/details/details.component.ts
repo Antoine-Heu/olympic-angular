@@ -5,9 +5,10 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Olympic } from 'src/app/core/models/Olympic';
 
 @Component({
-  selector: 'app-details',
-  templateUrl: './details.component.html',
-  styleUrl: './details.component.scss'
+    selector: 'app-details',
+    templateUrl: './details.component.html',
+    styleUrl: './details.component.scss',
+    standalone: false
 })
 export class DetailsComponent implements OnInit {
   public countryName: string = '';
