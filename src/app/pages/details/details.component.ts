@@ -1,50 +1,86 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { ActivatedRoute } from '@angular/router'
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { OlympicService } from 'src/app/core/services/olympic.service';
-import { Olympic } from 'src/app/core/models/Olympic';
+import { ChartConfiguration, ChartType } from 'chart.js';
+
+import { BaseChartDirective } from 'ng2-charts';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-details',
-    templateUrl: './details.component.html',
-    styleUrl: './details.component.scss',
-    standalone: false
+  selector: 'app-details',
+  templateUrl: './details.component.html',
+  styleUrls: ['./details.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    BaseChartDirective,
+  ],
 })
 export class DetailsComponent implements OnInit {
-  public countryName: string = '';
-  public countryData$: Observable<Olympic | undefined> = of(undefined);
-  public chartData$: Observable<any[]> = of([]);
-
-  view: [number, number] = [700, 400];
-
-  // options
-  legend: boolean = true;
-  showLabels: boolean = true;
-  animations: boolean = true;
-  xAxis: boolean = true;
-  yAxis: boolean = true;
-  showYAxisLabel: boolean = true;
-  showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'year';
-  yAxisLabel: string = 'medals';
-  timeline: boolean = true;
-
-  colorScheme = {
-    domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
+  countryName: string = '';
+  public lineChartData: ChartConfiguration['data'] = {
+    datasets: [],
+    labels: [],
   };
 
+  public lineChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    elements: {
+      line: {
+        tension: 0.4,
+      },
+    },
+    scales: {
+      y: {
+        position: 'left',
+        beginAtZero: true,
+      },
+    },
+    plugins: {
+      legend: { display: true },
+    },
+  };
+
+  public lineChartType: ChartType = 'line';
+
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+
   constructor(
-    private olympicService: OlympicService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private olympicService: OlympicService
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
+    this.route.paramMap.subscribe(params => {
       const country = params.get('country');
       if (country) {
         this.countryName = country;
-        this.countryData$ = this.olympicService.getOlympicCountry(country);
-        this.chartData$ = this.olympicService.getCountryChartData(country);
+        this.loadCountryData(country);
+      }
+    });
+  }
+
+  loadCountryData(country: string): void {
+    this.olympicService.getCountryChartData(country).subscribe(data => {
+      if (data.length > 0) {
+        this.lineChartData = {
+          labels: data.map(d => d.year),
+          datasets: [
+            {
+              data: data.map(d => d.medals),
+              label: `Médailles de ${country}`,
+              backgroundColor: 'rgba(75,192,192,0.2)',
+              borderColor: 'rgba(75,192,192,1)',
+              pointBackgroundColor: 'rgba(75,192,192,1)',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'rgba(75,192,192,1)',
+              fill: 'origin',
+            },
+          ],
+        };
+
+        this.chart?.update();
       }
     });
   }

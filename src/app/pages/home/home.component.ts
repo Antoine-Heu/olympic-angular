@@ -50,12 +50,4 @@ export class HomeComponent implements OnInit {
     this.selectedCountry = event;
     this.router.navigate(['/details', event.name]);
   }
-
-  onActivate(event: any): void {
-    console.log(event);
-  }
-
-  onDeactivate(event: any): void {
-    console.log(event);
-  }
 }

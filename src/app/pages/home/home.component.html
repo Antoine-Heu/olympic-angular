@@ -1,4 +1,5 @@
 <div class="container">
+  <div class="headblock">
     <div class="title-frame">
       <h2>Medals per Country</h2>
     </div>
@@ -12,20 +13,20 @@
         <p>10</p>
       </div>
     </div>
-    
-    <div class="centered-chart">
-      <ngx-charts-pie-chart
-        [view]="view"
-        [scheme]="colorScheme"
-        [results]="olympicData"
-        (select)="onSelect($event)"
-        [gradient]="gradient"
-        [labels]="labels"
-        [explodeSlices]="explodeSlices"
-        [animations]="animations"
-        >
-      </ngx-charts-pie-chart>
-    </div>
-  
   </div>
   
+  <div class="centered-chart">
+    <ngx-charts-pie-chart
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="olympicData"
+      (select)="onSelect($event)"
+      [gradient]="gradient"
+      [labels]="labels"
+      [explodeSlices]="explodeSlices"
+      [animations]="animations"
+      >
+    </ngx-charts-pie-chart>
+  </div>
+
+</div>
