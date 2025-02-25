@@ -15,4 +15,6 @@ export interface Olympic {
   country: string;
   participations: Participation[];
   totalMedals?: number;
+  athleteCount?: number;
+  entries?: number;
 }

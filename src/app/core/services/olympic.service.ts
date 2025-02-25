@@ -23,6 +23,7 @@ export class OlympicService {
       tap((olympics) => {
         olympics.forEach(olympic => {
           olympic.totalMedals = this.getMedalsCountByCountry(olympic);
+          olympic.athleteCount = this.getathleteCountByCountry(olympic);
         });
       this.olympics$.next(olympics);
     }),
@@ -62,5 +63,15 @@ export class OlympicService {
           : []
       )
     );
+  }
+
+  getTotalCountries(): Observable<number> {
+    return this.olympics$.pipe(
+      map((olympics) => (olympics ? olympics.length : 0))
+    );
+  }
+
+  getathleteCountByCountry(olympic: Olympic): number {
+    return olympic.participations.reduce((sum, p) => sum + p.athleteCount, 0);
   }
 }

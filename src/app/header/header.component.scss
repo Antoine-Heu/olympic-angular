@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  margin: 0;
+  left: 0;
+  background-color: #7fbbdb;
+  color: black;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  height: 60px;
+  & h1 {
+    justify-content: center;
+    margin: auto;
+  }
+}

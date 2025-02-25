@@ -11,7 +11,7 @@
   align-items: center;
   padding: 5px;
   border-radius: 8px;
-  margin-bottom: 5px auto;
+  margin: 20px;
   width: fit-content;
   & h2 {
     text-align: center;
@@ -54,17 +54,4 @@
       font-weight: 500;
     }
   }
-}
-
-.headblock{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: 100%;
-}
-
-.centered-chart {
-  display:flex;
-  justify-content: center;
 }

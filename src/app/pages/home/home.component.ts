@@ -27,9 +27,11 @@ export class HomeComponent implements OnInit {
   explodeSlices: boolean = false;
   animations: boolean = true;
 
+  countriesCount: number = 0;
+
   constructor(
     private olympicService: OlympicService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +45,9 @@ export class HomeComponent implements OnInit {
           };
         });
       }
+    });
+    this.olympicService.getTotalCountries().subscribe((count) => {
+      this.countriesCount = count;
     });
   }
 

@@ -1,5 +1,25 @@
 .container {
-  align-items: center;
+  display:flex;
+  flex-direction: column;
   justify-content: center;
+  margin: 0 auto;
   max-width: 60%;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+  min-height: 100vh;
+}
+.headblock{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+.centered-chart {
+  display:flex;
+  justify-content: center;
+}
+.btn {
+  display: flex;
+  justify-content: flex-end;
+  margin: 20px;
 }

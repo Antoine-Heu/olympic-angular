@@ -1,6 +1,8 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OlympicService } from 'src/app/core/services/olympic.service';
+import { Olympic } from 'src/app/core/models/Olympic';
 import { ChartConfiguration, ChartType } from 'chart.js';
 
 import { BaseChartDirective } from 'ng2-charts';
@@ -18,11 +20,13 @@ import { CommonModule } from '@angular/common';
 })
 export class DetailsComponent implements OnInit {
   countryName: string = '';
+
+  public olympics$: Observable<Olympic[] | undefined> = of(undefined);
+  public olympicData: any[] = [];
   public lineChartData: ChartConfiguration['data'] = {
     datasets: [],
     labels: [],
   };
-
   public lineChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     elements: {
@@ -40,13 +44,13 @@ export class DetailsComponent implements OnInit {
       legend: { display: true },
     },
   };
-
   public lineChartType: ChartType = 'line';
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private olympicService: OlympicService
   ) {}
 
@@ -58,6 +62,17 @@ export class DetailsComponent implements OnInit {
         this.loadCountryData(country);
       }
     });
+  //   this.olympics$ = this.olympicService.getOlympics();
+  //   this.olympics$.subscribe((data) => {
+  //     if (data) {
+  //       this.olympicData = data.map((olympic) => {
+  //         return {
+  //           athletes: olympic.athleteCount,
+  //           entries: olympic.entries,
+  //         };
+  //       });
+  //     }
+  //   });
   }
 
   loadCountryData(country: string): void {
@@ -83,5 +98,9 @@ export class DetailsComponent implements OnInit {
         this.chart?.update();
       }
     });
+  }
+
+  goHome() {
+    this.router.navigateByUrl('');
   }
 }

@@ -6,15 +6,15 @@
     <div class="content-frame">
       <div class="frame">
         <h3>Number of JOs</h3>
-        <p>10</p>
+        <p>{{ olympicData.length }}</p>
       </div>
       <div class="frame">
         <h3>Number of countries</h3>
-        <p>10</p>
+        <p>{{ countriesCount }}</p>
       </div>
     </div>
   </div>
-  
+
   <div class="centered-chart">
     <ngx-charts-pie-chart
       [view]="view"
