@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Olympic } from 'src/app/core/models/Olympic';
@@ -20,24 +20,32 @@ import { CommonModule } from '@angular/common';
 })
 export class DetailsComponent implements OnInit {
   countryName: string = '';
+  athleteCount: number = 0;
+  medalsCount: number = 0;
+  entriesCount: number = 0;
+
+  private subscription: Subscription = new Subscription();
 
   public olympics$: Observable<Olympic[] | undefined> = of(undefined);
-  public olympicData: any[] = [];
+  public olympicData: { athletes: number; entries: number }[] = [];
   public lineChartData: ChartConfiguration['data'] = {
     datasets: [],
     labels: [],
   };
   public lineChartOptions: ChartConfiguration['options'] = {
     responsive: true,
+    maintainAspectRatio: false,
     elements: {
       line: {
-        tension: 0.4,
+        tension: 0,
       },
     },
     scales: {
       y: {
         position: 'left',
         beginAtZero: true,
+        min: 0,
+        max: 140,
       },
     },
     plugins: {
@@ -55,52 +63,61 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.subscription = this.route.paramMap.subscribe(params => {
       const country = params.get('country');
       if (country) {
         this.countryName = country;
         this.loadCountryData(country);
+        this.loadCountryStats(country);
       }
     });
-  //   this.olympics$ = this.olympicService.getOlympics();
-  //   this.olympics$.subscribe((data) => {
-  //     if (data) {
-  //       this.olympicData = data.map((olympic) => {
-  //         return {
-  //           athletes: olympic.athleteCount,
-  //           entries: olympic.entries,
-  //         };
-  //       });
-  //     }
-  //   });
   }
-
+  
   loadCountryData(country: string): void {
-    this.olympicService.getCountryChartData(country).subscribe(data => {
-      if (data.length > 0) {
+    this.subscription = this.olympicService.getCountryChartData(country).subscribe(data => {
+      if (data && data.length > 0) {
+        const borderColor = this.olympicService.getCountryColor(country);
         this.lineChartData = {
           labels: data.map(d => d.year),
           datasets: [
             {
               data: data.map(d => d.medals),
-              label: `Médailles de ${country}`,
-              backgroundColor: 'rgba(75,192,192,0.2)',
-              borderColor: 'rgba(75,192,192,1)',
-              pointBackgroundColor: 'rgba(75,192,192,1)',
-              pointBorderColor: '#fff',
-              pointHoverBackgroundColor: '#fff',
-              pointHoverBorderColor: 'rgba(75,192,192,1)',
+              label: `Medals for ${country}`,
+              backgroundColor: 'rgba(255,255,255,0)',
+              borderColor: borderColor,
+              pointBackgroundColor: 'rgba(0,0,0,1)',
+              pointBorderColor: 'rgba(0,0,0,1)',
+              pointHoverBackgroundColor: borderColor,
+              pointHoverBorderColor: borderColor,
               fill: 'origin',
             },
           ],
         };
 
         this.chart?.update();
+      // } else {
+      //   this.router.navigate(['/not-found']);
       }
+    });
+  }
+
+  loadCountryStats(country: string): void {
+    this.subscription = this.olympicService.getAthleteCount(country).subscribe(athletes => {
+      this.athleteCount = athletes;
+    });
+    this.subscription = this.olympicService.getMedalsCount(country).subscribe(medals => {
+      this.medalsCount = medals;
+    });
+    this.subscription = this.olympicService.getEntriesCount(country).subscribe(entries => {
+      this.entriesCount = entries;
     });
   }
 
   goHome() {
     this.router.navigateByUrl('');
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

@@ -14,7 +14,4 @@ export interface Olympic {
   id: string;
   country: string;
   participations: Participation[];
-  totalMedals?: number;
-  athleteCount?: number;
-  entries?: number;
 }

@@ -13,20 +13,19 @@
         <p>{{ countriesCount }}</p>
       </div>
     </div>
+    <div class="centered-chart">
+      <ngx-charts-pie-chart
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="olympicData"
+        (select)="onSelect($event)"
+        [gradient]="gradient"
+        [labels]="labels"
+        [tooltipText]="customTooltipText"
+        [explodeSlices]="explodeSlices"
+        [animations]="animations"
+        >
+      </ngx-charts-pie-chart>
+    </div>
   </div>
-
-  <div class="centered-chart">
-    <ngx-charts-pie-chart
-      [view]="view"
-      [scheme]="colorScheme"
-      [results]="olympicData"
-      (select)="onSelect($event)"
-      [gradient]="gradient"
-      [labels]="labels"
-      [explodeSlices]="explodeSlices"
-      [animations]="animations"
-      >
-    </ngx-charts-pie-chart>
-  </div>
-
 </div>

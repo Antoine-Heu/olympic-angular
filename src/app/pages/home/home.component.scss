@@ -1,22 +1,44 @@
 .container {
   display:flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   margin: 0 auto;
   max-width: 60%;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   min-height: 100vh;
+  padding-top: 11%;
+  box-sizing: border-box;
   & .headblock{
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 20px;
     align-items: center;
     flex-direction: column;
     height: 100%;
+    max-width: 100% !important;
+    & .centered-chart {
+      display:flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 100% !important;
+      height: auto;
+    }
   }
+}
 
-  & .centered-chart {
-    display:flex;
-    justify-content: center;
+@media (max-width: 768px) {
+  .container {
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+  max-width: 100%;
   }
 }

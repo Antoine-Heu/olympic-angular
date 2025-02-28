@@ -9,21 +9,22 @@ import { Participation } from '../models/Participation';
   providedIn: 'root',
 })
 export class OlympicService {
-  private olympicUrl = './assets/mock/olympic.json';
+  private readonly olympicUrl = './assets/mock/olympic.json';
+  private countryColorMap: { [key: string]: string } = {};
 
-// type tableau Olympic ou undefined
+  // type tableau Olympic ou undefined
   private olympics$ = new BehaviorSubject<Olympic[] | undefined>(undefined);
-  private participations$ = new BehaviorSubject<Participation[] | undefined>(undefined);
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient
+  ) {}
 
   loadInitialData() {
     // get le tableau olympic
     return this.http.get<Olympic[]>(this.olympicUrl).pipe(
       tap((olympics) => {
         olympics.forEach(olympic => {
-          olympic.totalMedals = this.getMedalsCountByCountry(olympic);
-          olympic.athleteCount = this.getathleteCountByCountry(olympic);
+          this.getMedalsCountByCountry(olympic);
         });
       this.olympics$.next(olympics);
     }),
@@ -52,7 +53,7 @@ export class OlympicService {
     );
   }
 
-  getCountryChartData(countryName: string): Observable<any[]> {
+  getCountryChartData(countryName: string): Observable<CountryChartData[]> {
     return this.getOlympicCountry(countryName).pipe(
       map((country) =>
         country
@@ -71,7 +72,61 @@ export class OlympicService {
     );
   }
 
-  getathleteCountByCountry(olympic: Olympic): number {
-    return olympic.participations.reduce((sum, p) => sum + p.athleteCount, 0);
+  getAthleteCount(countryName: string): Observable<number> {
+    return this.getOlympicCountry(countryName).pipe(
+      map((country) =>
+        country ? country.participations.reduce((sum, p) => sum + p.athleteCount, 0) : 0
+      )
+    );
+  }
+
+  getMedalsCount(countryName: string): Observable<number> {
+    return this.getOlympicCountry(countryName).pipe(
+      map((country) =>
+        country ? country.participations.reduce((sum, p) => sum + p.medalsCount, 0) : 0
+      )
+    );
+  }
+
+  getEntriesCount(countryName: string): Observable<number> {
+    return this.getOlympicCountry(countryName).pipe(
+      map((country) => (country ? country.participations.length : 0))
+    );
+  }
+
+  getCountryColor(country: string): string {
+    const colors = [
+      '#956065',
+      '#793d52',
+      '#89a1db',
+      '#9780a1',
+      '#bfe0f1',
+    ];
+    if (!this.countryColorMap[country]) {
+      // Assignez une couleur unique au pays
+      const assignedColors = Object.values(this.countryColorMap);
+      const availableColors = colors.filter(color => !assignedColors.includes(color));
+  
+      if (availableColors.length > 0) {
+        // Assignez une couleur disponible
+        this.countryColorMap[country] = availableColors[0];
+      } else {
+        // Si toutes les couleurs sont utilisées, utilisez le hachage pour assigner une couleur
+        let hash = 0;
+        for (let i = 0; i < country.length; i++) {
+          hash = country.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const index = Math.abs(hash) % colors.length;
+        this.countryColorMap[country] = colors[index];
+      }
+    }
+  
+    return this.countryColorMap[country];
   }
 }
+
+export interface CountryChartData {
+  year: string;
+  medals: number;
+}
+
