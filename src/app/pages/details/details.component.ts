@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OlympicService } from 'src/app/core/services/olympic.service';
@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
     BaseChartDirective,
   ],
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnDestroy {
   countryName: string = '';
   athleteCount: number = 0;
   medalsCount: number = 0;
@@ -95,8 +95,8 @@ export class DetailsComponent implements OnInit {
         };
 
         this.chart?.update();
-      // } else {
-      //   this.router.navigate(['/not-found']);
+      } else {
+        this.router.navigate(['/not-found']);
       }
     });
   }

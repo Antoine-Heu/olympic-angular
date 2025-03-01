@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Olympic } from '../models/Olympic';
-import { Participation } from '../models/Participation';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +11,6 @@ export class OlympicService {
   private readonly olympicUrl = './assets/mock/olympic.json';
   private countryColorMap: { [key: string]: string } = {};
 
-  // type tableau Olympic ou undefined
   private olympics$ = new BehaviorSubject<Olympic[] | undefined>(undefined);
 
   constructor(
@@ -20,7 +18,6 @@ export class OlympicService {
   ) {}
 
   loadInitialData() {
-    // get le tableau olympic
     return this.http.get<Olympic[]>(this.olympicUrl).pipe(
       tap((olympics) => {
         olympics.forEach(olympic => {
@@ -38,11 +35,10 @@ export class OlympicService {
     );
   }
 
-  // ajout observable
   getOlympics(): Observable<Olympic[] | undefined> {
     return this.olympics$.asObservable();
   }
-  // toute les fonctions doivent être implémentées ici
+
   getMedalsCountByCountry(olympic: Olympic): number {
     return olympic.participations.reduce((sum, p) => sum + p.medalsCount, 0);
   }
@@ -103,15 +99,12 @@ export class OlympicService {
       '#bfe0f1',
     ];
     if (!this.countryColorMap[country]) {
-      // Assignez une couleur unique au pays
       const assignedColors = Object.values(this.countryColorMap);
       const availableColors = colors.filter(color => !assignedColors.includes(color));
   
       if (availableColors.length > 0) {
-        // Assignez une couleur disponible
         this.countryColorMap[country] = availableColors[0];
       } else {
-        // Si toutes les couleurs sont utilisées, utilisez le hachage pour assigner une couleur
         let hash = 0;
         for (let i = 0; i < country.length; i++) {
           hash = country.charCodeAt(i) + ((hash << 5) - hash);
@@ -120,7 +113,6 @@ export class OlympicService {
         this.countryColorMap[country] = colors[index];
       }
     }
-  
     return this.countryColorMap[country];
   }
 }
