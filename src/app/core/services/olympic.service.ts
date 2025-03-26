@@ -26,9 +26,7 @@ export class OlympicService {
       this.olympics$.next(olympics);
     }),
       catchError((error, caught) => {
-        // TODO: improve error handling
         console.error(error);
-        // can be useful to end loading state and let the user know something went wrong
         this.olympics$.next(undefined);
         return caught;
       })

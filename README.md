@@ -1,29 +1,64 @@
+# Dashboard des Jeux Olympiques
+
+This project is a web application developped with Angular to visualize performances of 
+countries at the olympic games using interactives charts and a details page.
+
 # OlympicGamesStarter
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
+This project was generated with 
 
+[Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
+[Node.js] version 16 or superior
 Don't forget to install your node_modules before starting (`npm install`).
+
+# Installation
+
+Clone the project from github and intall dependencies : 
+
+## Clone the repository
+
+git clone <https://github.com/Antoine-Heu/olympic-angular.git>
+
+## Install dependencies
+
+npm install
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application 
+will automatically reload if you change any of the source files.
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` 
+directory.
 
-## Where to start
+# Architecture
 
-As you can see, an architecture has already been defined for the project. It is just a suggestion, you can choose to use your own. The predefined architecture includes (in addition to the default angular architecture) the following:
+The projet follows a modular and well-structured achitecture:
 
-- `components` folder: contains every reusable components
-- `pages` folder: contains components used for routing
-- `core` folder: contains the business logic (`services` and `models` folders)
+## pages
 
-I suggest you to start by understanding this starter code. Pay an extra attention to the `app-routing.module.ts` and the `olympic.service.ts`.
+Contains the components corresponding to the different pages of the application
 
-Once mastered, you should continue by creating the typescript interfaces inside the `models` folder. As you can see I already created two files corresponding to the data included inside the `olympic.json`. With your interfaces, improve the code by replacing every `any` by the corresponding interface.
+## header
 
-You're now ready to implement the requested features.
+A component that is applied everywhere in the application.
 
-Good luck!
+## core
+
+### services 
+Angular services for handling APU calls and data management.
+
+### models
+Typescript interfaces for structuring data.
+
+# Applied Angular Best Practices
+
+This project follows Angular recommendations to ensure maintainability and performance:
+
+- Using Angular services for HTTP calls (OlympicService).
+- Using RxJS and observables for asynchronous data management.
+- Unsubscribing from observables to prevent memory leaks.
+- Strict typing: Removing any by using TypeScript interfaces.
+
