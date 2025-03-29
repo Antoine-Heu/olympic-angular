@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Olympic } from '../models/Olympic';
+import { CountryChartData } from '../models/ChartData';
 
 @Injectable({
   providedIn: 'root',
@@ -60,6 +61,24 @@ export class OlympicService {
     );
   }
 
+  getTotalOlympics(): Observable<number> {
+    return this.olympics$.pipe(
+      map((olympics) => {
+        if (!olympics) {
+          return 0;
+        }
+        const years = new Set<number>();
+
+        olympics.forEach((olympic) => {
+          olympic.participations.forEach((participation) => {
+            years.add(participation.year);
+          });
+        });
+        return years.size;
+      }
+    ));
+  }
+
   getTotalCountries(): Observable<number> {
     return this.olympics$.pipe(
       map((olympics) => (olympics ? olympics.length : 0))
@@ -115,8 +134,5 @@ export class OlympicService {
   }
 }
 
-export interface CountryChartData {
-  year: string;
-  medals: number;
-}
+
 

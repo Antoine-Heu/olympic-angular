@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   countriesCount: number = 0;
+  JOsCount: number = 0;
 
   public olympics$: Observable<Olympic[] | undefined> = of(undefined);
   public olympicData: { name: string; value: number }[] = [];
@@ -59,6 +60,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.olympicService.getTotalCountries().subscribe((count) => {
         this.countriesCount = count;
+      })
+    );
+    this.subscription.add(
+      this.olympicService.getTotalOlympics().subscribe((count) => {
+        this.JOsCount = count;
       })
     );
   }
